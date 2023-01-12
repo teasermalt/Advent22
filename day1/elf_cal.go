@@ -5,24 +5,28 @@ import (
 	"os"
 	"bufio"
 	//"io"
+
 )
 
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
+func readLines() ([]string, error) {
+	filename := os.Args[1]
+	list := make([]string, 0)
+	
+	file, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		fmt.Println("Error opening file")
+		os.Exit(1)
 	}
-
-	defer file.Close()
-
-	var lines []string
 	scanner := bufio.NewScanner(file)
-	for {
-		lines = append(lines, scanner.Text())
+	for scanner.Scan() {
+		list = append(list, scanner.Text())
 	}
-	return lines, scanner.Err()
+	defer file.Close()
+	return list, scanner.Err()
+
 }
 
 func main() {
-	fmt.Println(readLines("elf_cal.txt"))
+	calories := readLines()
+	fmt.Println(calories)
 }
